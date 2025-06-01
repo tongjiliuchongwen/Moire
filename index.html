@@ -1,33 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Moiré Pattern Simulator</title>
+    <title>交互式莫尔条纹模拟器</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="bg-gradient-to-br from-slate-900 via-gray-800 to-slate-900 text-slate-200 min-h-screen flex flex-col items-center justify-center p-4 font-sans">
 
     <header class="w-full max-w-7xl mb-8 text-center">
-        <h1 class="text-4xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-blue-500">Interactive Moiré Pattern Simulator</h1>
-        <p class="text-slate-400 mt-2 text-lg">Explore the fascinating world of Moiré patterns by customizing and combining gratings.</p>
+        <h1 class="text-4xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-blue-500">交互式莫尔条纹模拟器</h1>
+        <p class="text-slate-400 mt-2 text-lg">通过自定义和组合光栅，探索奇妙的莫尔条纹世界。</p>
     </header>
 
     <div class="flex flex-col lg:flex-row w-full max-w-7xl gap-6">
         <div class="lg:w-2/5 space-y-6">
             <div class="bg-slate-800/70 backdrop-blur-md shadow-2xl rounded-xl p-6 ring-1 ring-slate-700">
-                <h2 class="text-2xl font-semibold mb-6 text-sky-400 border-b border-slate-700 pb-3">General Settings</h2>
+                <h2 class="text-2xl font-semibold mb-6 text-sky-400 border-b border-slate-700 pb-3">通用设置</h2>
                 <div class="space-y-4">
                     <div>
-                        <label for="paramL" class="block text-sm font-medium text-slate-300 mb-1">Visualization Range (L)</label>
+                        <label for="paramL" class="block text-sm font-medium text-slate-300 mb-1">可视化范围 (L)</label>
                         <div class="flex items-center space-x-2">
                             <input type="range" id="paramL" min="10" max="100" value="50" step="1" class="w-full custom-slider">
                             <input type="number" id="paramL_val" value="50" class="w-20 bg-slate-700 border border-slate-600 rounded-md p-2 text-sm text-center focus:ring-sky-500 focus:border-sky-500">
                         </div>
                     </div>
                     <div>
-                        <label for="paramN" class="block text-sm font-medium text-slate-300 mb-1">Resolution (N x N pixels)</label>
+                        <label for="paramN" class="block text-sm font-medium text-slate-300 mb-1">分辨率 (N x N 像素)</label>
                          <div class="flex items-center space-x-2">
                             <input type="range" id="paramN" min="100" max="500" value="250" step="10" class="w-full custom-slider">
                             <input type="number" id="paramN_val" value="250" class="w-20 bg-slate-700 border border-slate-600 rounded-md p-2 text-sm text-center focus:ring-sky-500 focus:border-sky-500">
@@ -42,21 +42,21 @@
 
         <div class="lg:w-3/5 grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
             <div class="bg-slate-800/50 backdrop-blur-sm shadow-xl rounded-lg p-4 ring-1 ring-slate-700 flex flex-col items-center">
-                <h3 class="text-lg font-medium mb-3 text-sky-400">Grating A</h3>
+                <h3 class="text-lg font-medium mb-3 text-sky-400">光栅 A</h3>
                 <canvas id="canvasA" class="rounded-md border border-slate-700 shadow-inner"></canvas>
             </div>
             <div class="bg-slate-800/50 backdrop-blur-sm shadow-xl rounded-lg p-4 ring-1 ring-slate-700 flex flex-col items-center">
-                <h3 class="text-lg font-medium mb-3 text-sky-400">Grating B</h3>
+                <h3 class="text-lg font-medium mb-3 text-sky-400">光栅 B</h3>
                 <canvas id="canvasB" class="rounded-md border border-slate-700 shadow-inner"></canvas>
             </div>
             <div class="bg-slate-800/50 backdrop-blur-sm shadow-xl rounded-lg p-4 ring-1 ring-slate-700 flex flex-col items-center">
-                <h3 class="text-lg font-medium mb-3 text-sky-400">Moiré Pattern</h3>
+                <h3 class="text-lg font-medium mb-3 text-sky-400">莫尔条纹</h3>
                 <canvas id="canvasMoire" class="rounded-md border border-slate-700 shadow-inner"></canvas>
             </div>
         </div>
     </div>
     <footer class="w-full max-w-7xl mt-12 text-center text-slate-500 text-sm">
-        <p></p>
+        <p>Neo 的莫尔条纹模拟器 | AI 设计与实现</p>
     </footer>
     <script type="module" src="script.js"></script>
 </body>
