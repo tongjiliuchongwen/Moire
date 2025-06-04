@@ -5,13 +5,13 @@ let config = {
     N: 250,
     gratingA: {
         idPrefix: 'gratingA',
-        type: '平行线型', // <-- Changed
-        params: { '线距': 5.0, 'X偏移': 0 } // <-- Changed keys
+        type: '平行线型',
+        params: { '线距': 5.0, 'X偏移': 0, '倾角': 0 } // 添加倾角参数
     },
     gratingB: {
         idPrefix: 'gratingB',
-        type: '辐射线型', // <-- Changed
-        params: { '辐射线条数': 12, '角度偏移': 0, '中心X': 0, '中心Y': 0 } // <-- Changed keys
+        type: '辐射线型',
+        params: { '辐射线条数': 12, '角度偏移': 0, '中心X': 0, '中心Y': 0 }
     }
 };
 
@@ -23,15 +23,33 @@ const contexts = {
 };
 
 const gratingParamDefinitions = {
-    '平行线型': [ // <-- Changed key
-        { id: '线距', label: '线间距 (d1)', type: 'range', min: 0.1, max: 20, step: 0.1, default: 5.0 }, // <-- Changed id
-        { id: 'X偏移', label: 'X 轴偏移', type: 'range', min: -config.L, max: config.L, step: 0.1, default: 0 } // <-- Changed id
+    '平行线型': [
+        { id: '线距', label: '线间距 (d1)', type: 'range', min: 0.1, max: 20, step: 0.1, default: 5.0 },
+        { id: 'X偏移', label: 'X 轴偏移', type: 'range', min: -config.L, max: config.L, step: 0.1, default: 0 },
+        { id: '倾角', label: '倾角 (度)', type: 'range', min: -90, max: 90, step: 1, default: 0 } // 新增倾角控制
     ],
-    '辐射线型': [ // <-- Changed key
-        { id: '辐射线条数', label: '辐射线条数', type: 'range', min: 2, max: 100, step: 1, default: 12 }, // <-- Changed id
-        { id: '角度偏移', label: '角度偏移 (度)', type: 'range', min: 0, max: 360, step: 1, default: 0 }, // <-- Changed id
-        { id: '中心X', label: '中心 X', type: 'range', min: -config.L, max: config.L, step: 0.1, default: 0 }, // <-- Changed id
-        { id: '中心Y', label: '中心 Y', type: 'range', min: -config.L, max: config.L, step: 0.1, default: 0 } // <-- Changed id
+    '辐射线型': [
+        { id: '辐射线条数', label: '辐射线条数', type: 'range', min: 2, max: 100, step: 1, default: 12 },
+        { id: '角度偏移', label: '角度偏移 (度)', type: 'range', min: 0, max: 360, step: 1, default: 0 },
+        { id: '中心X', label: '中心 X', type: 'range', min: -config.L, max: config.L, step: 0.1, default: 0 },
+        { id: '中心Y', label: '中心 Y', type: 'range', min: -config.L, max: config.L, step: 0.1, default: 0 }
+    ],
+    '同心圆型': [ // 新增同心圆光栅
+        { id: '环间距', label: '环间距', type: 'range', min: 0.1, max: 20, step: 0.1, default: 5.0 },
+        { id: '中心X', label: '中心 X', type: 'range', min: -config.L, max: config.L, step: 0.1, default: 0 },
+        { id: '中心Y', label: '中心 Y', type: 'range', min: -config.L, max: config.L, step: 0.1, default: 0 }
+    ],
+    '正弦波型': [ // 新增正弦波光栅
+        { id: '波长', label: '波长', type: 'range', min: 0.5, max: 20, step: 0.1, default: 5.0 },
+        { id: '振幅', label: '振幅', type: 'range', min: 0.1, max: 20, step: 0.1, default: 2.0 },
+        { id: '相位', label: '相位 (度)', type: 'range', min: 0, max: 360, step: 1, default: 0 },
+        { id: '方向', label: '方向 (度)', type: 'range', min: 0, max: 360, step: 1, default: 0 }
+    ],
+    '方格型': [ // 新增方格光栅
+        { id: 'X线距', label: 'X 线间距', type: 'range', min: 0.1, max: 20, step: 0.1, default: 5.0 },
+        { id: 'Y线距', label: 'Y 线间距', type: 'range', min: 0.1, max: 20, step: 0.1, default: 5.0 },
+        { id: 'X偏移', label: 'X 轴偏移', type: 'range', min: -config.L, max: config.L, step: 0.1, default: 0 },
+        { id: 'Y偏移', label: 'Y 轴偏移', type: 'range', min: -config.L, max: config.L, step: 0.1, default: 0 }
     ]
 };
 
@@ -43,11 +61,13 @@ function updateParamRangeForL(gratingKey) {
     // Define which params are spatial and need L-based updates
     const spatialParamsMap = {
         '平行线型': ['X偏移'],
-        '辐射线型': ['中心X', '中心Y']
+        '辐射线型': ['中心X', '中心Y'],
+        '同心圆型': ['中心X', '中心Y'],
+        '方格型': ['X偏移', 'Y偏移']
     };
     const paramsToUpdate = spatialParamsMap[currentGratingType] || [];
 
-    paramsToUpdate.forEach(paramId => { // paramId will be Chinese here
+    paramsToUpdate.forEach(paramId => {
         const inputEl = document.getElementById(`${gratingKey}_${paramId}`);
         const valEl = document.getElementById(`${gratingKey}_${paramId}_val`);
         if (inputEl) {
@@ -56,14 +76,13 @@ function updateParamRangeForL(gratingKey) {
             inputEl.step = L / 100 > 0 ? L / 100 : 0.01;
 
             if (gratingConfig.params[paramId] > L || gratingConfig.params[paramId] < -L) {
-                gratingConfig.params[paramId] = 0;
-                inputEl.value = 0;
-                if (valEl) valEl.value = 0;
+                gratingConfig.params[paramId] = Math.max(-L, Math.min(L, gratingConfig.params[paramId]));
+                inputEl.value = gratingConfig.params[paramId];
+                valEl.value = gratingConfig.params[paramId];
             }
         }
     });
 }
-
 
 function createGratingControls(gratingKey, containerId) {
     const gratingConfig = config[gratingKey];
@@ -89,26 +108,28 @@ function createGratingControls(gratingKey, containerId) {
     typeSelector.id = `${gratingKey}_type`;
     typeSelector.className = 'w-full bg-slate-700 border border-slate-600 rounded-md p-2 text-sm focus:ring-sky-500 focus:border-sky-500';
 
-    Object.keys(gratingParamDefinitions).forEach(typeKey => { // typeKey will be Chinese here
+    Object.keys(gratingParamDefinitions).forEach(typeKey => {
         const option = document.createElement('option');
-        option.value = typeKey; // Use Chinese key as value
+        option.value = typeKey;
 
-        // Display text for option (already translated in previous step, but ensure consistency)
-        if (typeKey === '平行线型') {
-            option.textContent = '平行线';
-        } else if (typeKey === '辐射线型') {
-            option.textContent = '辐射线';
-        } else {
-            option.textContent = typeKey; // Fallback
-        }
+        // 显示文本映射
+        const displayNames = {
+            '平行线型': '平行线',
+            '辐射线型': '辐射线', 
+            '同心圆型': '同心圆',
+            '正弦波型': '正弦波',
+            '方格型': '方格'
+        };
+        option.textContent = displayNames[typeKey] || typeKey;
 
         if (typeKey === gratingConfig.type) option.selected = true;
         typeSelector.appendChild(option);
     });
+    
     typeSelector.addEventListener('change', (e) => {
-        gratingConfig.type = e.target.value; // e.target.value will be Chinese
+        gratingConfig.type = e.target.value;
         const newParams = {};
-        gratingParamDefinitions[gratingConfig.type].forEach(p => newParams[p.id] = p.default); // p.id is Chinese
+        gratingParamDefinitions[gratingConfig.type].forEach(p => newParams[p.id] = p.default);
         gratingConfig.params = newParams;
         createGratingControls(gratingKey, containerId);
         renderAll();
@@ -117,12 +138,12 @@ function createGratingControls(gratingKey, containerId) {
     controlWrapper.appendChild(typeSelectorDiv);
 
     const params = gratingParamDefinitions[gratingConfig.type];
-    params.forEach(param => { // param.id will be Chinese here
+    params.forEach(param => {
         const paramDiv = document.createElement('div');
         const label = document.createElement('label');
-        label.htmlFor = `${gratingKey}_${param.id}`; // Element ID will contain Chinese
+        label.htmlFor = `${gratingKey}_${param.id}`;
         label.className = 'block text-sm font-medium text-slate-300 mb-1';
-        label.textContent = param.label; // This is already translated
+        label.textContent = param.label;
         paramDiv.appendChild(label);
 
         const inputContainer = document.createElement('div');
@@ -130,7 +151,7 @@ function createGratingControls(gratingKey, containerId) {
 
         const input = document.createElement('input');
         input.type = param.type;
-        input.id = `${gratingKey}_${param.id}`; // Element ID will contain Chinese
+        input.id = `${gratingKey}_${param.id}`;
         input.min = param.min;
         input.max = param.max;
         input.step = param.step;
@@ -139,21 +160,21 @@ function createGratingControls(gratingKey, containerId) {
 
         const valueDisplay = document.createElement('input');
         valueDisplay.type = 'number';
-        valueDisplay.id = `${gratingKey}_${param.id}_val`; // Element ID will contain Chinese
+        valueDisplay.id = `${gratingKey}_${param.id}_val`;
         valueDisplay.value = input.value;
         valueDisplay.className = 'w-20 bg-slate-700 border border-slate-600 rounded-md p-2 text-sm text-center focus:ring-sky-500 focus:border-sky-500';
         valueDisplay.step = param.step;
 
         input.addEventListener('input', (e) => {
             const val = parseFloat(e.target.value);
-            gratingConfig.params[param.id] = val; // param.id is Chinese
+            gratingConfig.params[param.id] = val;
             valueDisplay.value = val;
             renderAll();
         });
 
         valueDisplay.addEventListener('change', (e) => {
             let valStr = e.target.value;
-            const sliderInput = document.getElementById(`${gratingKey}_${param.id}`); // param.id is Chinese
+            const sliderInput = document.getElementById(`${gratingKey}_${param.id}`);
             const currentMin = parseFloat(sliderInput.min);
             const currentMax = parseFloat(sliderInput.max);
             const currentStep = parseFloat(sliderInput.step);
@@ -161,11 +182,8 @@ function createGratingControls(gratingKey, containerId) {
             let val = parseFloat(valStr);
 
             if (isNaN(val)) {
-                val = gratingConfig.params[param.id];  // param.id is Chinese
+                val = gratingConfig.params[param.id];
             } else {
-                if (val < currentMin) val = currentMin;
-                if (val > currentMax) val = currentMax;
-
                 if (currentStep > 0) {
                     val = Math.round(val / currentStep) * currentStep;
                 }
@@ -182,7 +200,7 @@ function createGratingControls(gratingKey, containerId) {
                 if (val > currentMax) val = currentMax;
             }
 
-            gratingConfig.params[param.id] = val; // param.id is Chinese
+            gratingConfig.params[param.id] = val;
             sliderInput.value = val;
             valueDisplay.value = val;
             renderAll();
@@ -197,7 +215,6 @@ function createGratingControls(gratingKey, containerId) {
     updateParamRangeForL(gratingKey);
 }
 
-
 function drawGrating(canvasCtx, gratingCfg, L, N) {
     canvasCtx.clearRect(0, 0, N, N);
     const imageData = canvasCtx.createImageData(N, N);
@@ -208,7 +225,6 @@ function drawGrating(canvasCtx, gratingCfg, L, N) {
             const X = -L + (j + 0.5) * (2 * L / N);
             const Y = L - (i + 0.5) * (2 * L / N);
 
-            // gratingCfg.type and gratingCfg.params keys will be Chinese here
             const val = calculateGratingValue(gratingCfg.type, X, Y, gratingCfg.params);
             const color = val * 255;
             const pixelIndex = (i * N + j) * 4;
@@ -233,6 +249,7 @@ function drawMoirePattern(canvasCtx, gratingACfg, gratingBCfg, L, N) {
 
             const valA = calculateGratingValue(gratingACfg.type, X, Y, gratingACfg.params);
             const valB = calculateGratingValue(gratingBCfg.type, X, Y, gratingBCfg.params);
+            
             const moireVal = valA * valB;
             const color = moireVal * 255;
             const pixelIndex = (i * N + j) * 4;
@@ -246,28 +263,12 @@ function drawMoirePattern(canvasCtx, gratingACfg, gratingBCfg, L, N) {
 }
 
 function renderAll() {
+    const L = config.L;
     const N = config.N;
-    canvases.A.width = N; canvases.A.height = N;
-    canvases.B.width = N; canvases.B.height = N;
-    canvases.Moire.width = N; canvases.Moire.height = N;
-
-    const parentA = canvases.A.parentElement;
-    if (parentA) {
-        const parentWidth = parentA.clientWidth;
-        const canvasSize = Math.max(50, Math.min(N, parentWidth - 16));
-
-        canvases.A.style.width = `${canvasSize}px`; canvases.A.style.height = `${canvasSize}px`;
-        canvases.B.style.width = `${canvasSize}px`; canvases.B.style.height = `${canvasSize}px`;
-        canvases.Moire.style.width = `${canvasSize}px`; canvases.Moire.style.height = `${canvasSize}px`;
-    }
-
-    requestAnimationFrame(() => {
-        if (contexts.A && contexts.B && contexts.Moire) {
-             drawGrating(contexts.A, config.gratingA, config.L, config.N);
-             drawGrating(contexts.B, config.gratingB, config.L, config.N);
-             drawMoirePattern(contexts.Moire, config.gratingA, config.gratingB, config.L, config.N);
-        }
-    });
+    
+    drawGrating(contexts.A, config.gratingA, L, N);
+    drawGrating(contexts.B, config.gratingB, L, N);
+    drawMoirePattern(contexts.Moire, config.gratingA, config.gratingB, L, N);
 }
 
 function initGeneralControls() {
@@ -337,27 +338,21 @@ function initialize() {
     canvases.A = document.getElementById('canvasA');
     canvases.B = document.getElementById('canvasB');
     canvases.Moire = document.getElementById('canvasMoire');
-
-    if (!canvases.A || !canvases.B || !canvases.Moire) {
-        console.error("一个或多个画布元素未找到！");
-        return;
-    }
-
+    
     contexts.A = canvases.A.getContext('2d');
     contexts.B = canvases.B.getContext('2d');
     contexts.Moire = canvases.Moire.getContext('2d');
 
+    Object.values(canvases).forEach(canvas => {
+        canvas.width = config.N;
+        canvas.height = config.N;
+    });
+
+    createGratingControls('gratingA', 'gratingAControls');
+    createGratingControls('gratingB', 'gratingBControls');
+    
     initGeneralControls();
-    createGratingControls('gratingA', 'gratingAControlsContainer');
-    createGratingControls('gratingB', 'gratingBControlsContainer');
-
     renderAll();
-
-    if (canvases.A.parentElement) {
-        new ResizeObserver(() => {
-            renderAll();
-        }).observe(canvases.A.parentElement);
-    }
 }
 
 document.addEventListener('DOMContentLoaded', initialize);
