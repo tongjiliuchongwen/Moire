@@ -14,8 +14,28 @@
         <p class="text-slate-400 mt-2 text-lg">通过自定义和组合光栅，探索奇妙的莫尔条纹世界。</p>
     </header>
 
-    <div class="flex flex-col lg:flex-row w-full max-w-7xl gap-6">
-        <div class="lg:w-2/5 space-y-6">
+    <!-- MODIFIED MAIN CONTENT AREA START -->
+    <div class="w-full max-w-7xl mx-auto space-y-8">
+
+        <!-- Row 1: Canvases/Images -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
+            <div class="bg-slate-800/50 backdrop-blur-sm shadow-xl rounded-lg p-4 ring-1 ring-slate-700 flex flex-col items-center">
+                <h3 class="text-lg font-medium mb-3 text-sky-400">光栅 A</h3>
+                <canvas id="canvasA" class="rounded-md border border-slate-700 shadow-inner"></canvas>
+            </div>
+            <div class="bg-slate-800/50 backdrop-blur-sm shadow-xl rounded-lg p-4 ring-1 ring-slate-700 flex flex-col items-center">
+                <h3 class="text-lg font-medium mb-3 text-sky-400">光栅 B</h3>
+                <canvas id="canvasB" class="rounded-md border border-slate-700 shadow-inner"></canvas>
+            </div>
+            <div class="bg-slate-800/50 backdrop-blur-sm shadow-xl rounded-lg p-4 ring-1 ring-slate-700 flex flex-col items-center">
+                <h3 class="text-lg font-medium mb-3 text-sky-400">莫尔条纹</h3>
+                <canvas id="canvasMoire" class="rounded-md border border-slate-700 shadow-inner"></canvas>
+            </div>
+        </div>
+
+        <!-- Row 2: Settings Panels -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- General Settings Panel -->
             <div class="bg-slate-800/70 backdrop-blur-md shadow-2xl rounded-xl p-6 ring-1 ring-slate-700">
                 <h2 class="text-2xl font-semibold mb-6 text-sky-400 border-b border-slate-700 pb-3">通用设置</h2>
                 <div class="space-y-4">
@@ -36,25 +56,19 @@
                 </div>
             </div>
 
-            <div id="gratingAControls" class="bg-slate-800/70 backdrop-blur-md shadow-2xl rounded-xl p-6 ring-1 ring-slate-700"></div>
-            <div id="gratingBControls" class="bg-slate-800/70 backdrop-blur-md shadow-2xl rounded-xl p-6 ring-1 ring-slate-700"></div>
-        </div>
+            <!-- Grating A Settings Panel -->
+            <div id="gratingAControls" class="bg-slate-800/70 backdrop-blur-md shadow-2xl rounded-xl p-6 ring-1 ring-slate-700">
+                <!-- Content for Grating A controls will be populated by script.js -->
+            </div>
 
-        <div class="lg:w-3/5 grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
-            <div class="bg-slate-800/50 backdrop-blur-sm shadow-xl rounded-lg p-4 ring-1 ring-slate-700 flex flex-col items-center">
-                <h3 class="text-lg font-medium mb-3 text-sky-400">光栅 A</h3>
-                <canvas id="canvasA" class="rounded-md border border-slate-700 shadow-inner"></canvas>
-            </div>
-            <div class="bg-slate-800/50 backdrop-blur-sm shadow-xl rounded-lg p-4 ring-1 ring-slate-700 flex flex-col items-center">
-                <h3 class="text-lg font-medium mb-3 text-sky-400">光栅 B</h3>
-                <canvas id="canvasB" class="rounded-md border border-slate-700 shadow-inner"></canvas>
-            </div>
-            <div class="bg-slate-800/50 backdrop-blur-sm shadow-xl rounded-lg p-4 ring-1 ring-slate-700 flex flex-col items-center">
-                <h3 class="text-lg font-medium mb-3 text-sky-400">莫尔条纹</h3>
-                <canvas id="canvasMoire" class="rounded-md border border-slate-700 shadow-inner"></canvas>
+            <!-- Grating B Settings Panel -->
+            <div id="gratingBControls" class="bg-slate-800/70 backdrop-blur-md shadow-2xl rounded-xl p-6 ring-1 ring-slate-700">
+                <!-- Content for Grating B controls will be populated by script.js -->
             </div>
         </div>
     </div>
+    <!-- MODIFIED MAIN CONTENT AREA END -->
+
     <footer class="w-full max-w-7xl mt-12 text-center text-slate-500 text-sm">
         <p></p>
     </footer>
