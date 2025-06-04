@@ -24,15 +24,15 @@ const contexts = {
 
 const gratingParamDefinitions = {
     '平行线型': [
-        { id: '线距', label: '线间距 (d1)', type: 'range', min: 0.1, max: 20, step: 0.1, default: 5.0 },
-        { id: 'X偏移', label: 'X 轴偏移', type: 'range', min: -config.L, max: config.L, step: 0.1, default: 0 },
-        { id: '倾角', label: '倾角 (度)', type: 'range', min: -90, max: 90, step: 1, default: 0 } // 新增倾角控制
+        { id: '线距', label: '线间距 (d1)', type: 'range', min: 0.05, max: 20, step: 0.01, default: 5.0 },
+        { id: 'X偏移', label: 'X 轴偏移', type: 'range', min: -config.L, max: config.L, step: 0.01, default: 0 },
+        { id: '倾角', label: '倾角 (度)', type: 'range', min: -90, max: 90, step: 0.1, default: 0 } // 新增倾角控制
     ],
     '辐射线型': [
-        { id: '辐射线条数', label: '辐射线条数', type: 'range', min: 2, max: 100, step: 1, default: 12 },
-        { id: '角度偏移', label: '角度偏移 (度)', type: 'range', min: 0, max: 360, step: 1, default: 0 },
-        { id: '中心X', label: '中心 X', type: 'range', min: -config.L, max: config.L, step: 0.1, default: 0 },
-        { id: '中心Y', label: '中心 Y', type: 'range', min: -config.L, max: config.L, step: 0.1, default: 0 }
+        { id: '辐射线条数', label: '辐射线条数', type: 'range', min: 2, max: 200, step: 1, default: 12 },
+        { id: '角度偏移', label: '角度偏移 (度)', type: 'range', min: 0, max: 360, step: 0.1, default: 0 },
+        { id: '中心X', label: '中心 X', type: 'range', min: -config.L, max: config.L, step: 0.01, default: 0 },
+        { id: '中心Y', label: '中心 Y', type: 'range', min: -config.L, max: config.L, step: 0.01, default: 0 }
     ],
     '同心圆型': [ // 新增同心圆光栅
         { id: '环间距', label: '环间距', type: 'range', min: 0.1, max: 20, step: 0.1, default: 5.0 },
